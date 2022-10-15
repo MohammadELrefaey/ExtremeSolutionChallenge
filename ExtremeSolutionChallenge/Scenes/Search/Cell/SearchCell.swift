@@ -24,7 +24,7 @@ class SearchCell: UITableViewCell {
     }
     
     //MARK: - Public Methods
-    public func configure(character: Results, searchQuery: String) {
+    public func configure(character: CharacterResponse, searchQuery: String) {
         let urlString = "\(character.thumbnail?.path ?? "")/portrait_incredible.\(character.thumbnail?.extension_ ?? "")"
         characterImg.setImage(with: urlString)
         nameLbl.text = character.name ?? ""

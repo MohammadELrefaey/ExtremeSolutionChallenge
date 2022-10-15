@@ -20,9 +20,10 @@ class DetailsVC: UIViewController {
     @IBOutlet weak var eventsCollection: UICollectionView!
     @IBOutlet weak var seriesCollection: UICollectionView!
     @IBOutlet weak var storiesCollection: UICollectionView!
-
+    @IBOutlet weak var mainStack: UIStackView!
+    
     //MARK: - Properties
-    var character: Results!
+    var character: CharacterResponse!
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -38,7 +39,7 @@ class DetailsVC: UIViewController {
     
 }
 
-//MARK:- CollectionView Delegate & DataSource
+//MARK: - CollectionView Delegate & DataSource
 extension DetailsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == comicsCollection {
@@ -79,8 +80,8 @@ extension DetailsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: 100, height: 150)
+        let height = collectionView.frame.height
+        return CGSize(width: 100, height: height)
     }
     
 }
@@ -103,7 +104,30 @@ extension DetailsVC {
         headerImg.setImage(with: urlString)
         nameLbl.text = character.name ?? ""
         descriptionLbl.text = character.description ?? ""
-        print(character.description ?? "")
+        handleEmptyViews()
     }
     
+    private func handleEmptyViews() {
+        if character.comics?.items?.count == 0 {
+            hideStack(tag: 0)
+        } else if character.events?.items?.count == 0 {
+            hideStack(tag: 1)
+        }  else if character.series?.items?.count == 0 {
+            hideStack(tag: 2)
+        } else if character.stories?.items?.count == 0 {
+            hideStack(tag: 3)
+        }
+    }
+    
+    private func hideStack(tag: Int) {
+        for stack in mainStack.arrangedSubviews {
+            
+            if stack.tag == tag {
+                stack.isHidden = true
+            } else {
+                stack.isHidden = false
+            }
+        }
+        
+    }
 }

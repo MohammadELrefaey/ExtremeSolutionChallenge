@@ -11,6 +11,7 @@ import Alamofire
 enum APIRouter: URLRequestConvertible {
         
     case getCharacters(offset: Int, searchQuery: String?)
+    case getItem(uri: String)
     // MARK: - HTTPMethod
     private var method: HTTPMethod {
         switch self {
@@ -23,15 +24,15 @@ enum APIRouter: URLRequestConvertible {
     private var path: String {
         switch self {
         case .getCharacters: return "characters"
+            
+        default:
+            return ""
         }
     }
         
     // MARK: - Parameters
     var parameters: Parameters? {
         switch self {
-//        case .getCharacters(let page):
-//            let param = ["offset": page]
-//            return param
         default: return nil
         }
     }
@@ -39,31 +40,37 @@ enum APIRouter: URLRequestConvertible {
     // MARK: - URLRequestConvertible
     func asURLRequest() throws -> URLRequest {
         
-        let baseUrl = ApiConstants.baseUrl + path
         let ts = "\(Int((Date().timeIntervalSince1970 * 1000.0).rounded()))"
         let publicKey = ApiConstants.publicKey
         let privateKey = ApiConstants.privateKey
         let privateKeyMd5 = ("\(ts)\(privateKey)\(publicKey)").MD5Hex()
         var requestParams = [String : String]()
+
+        var baseUrl = ""
+        
+        switch self {
+        case .getCharacters(let offset, let searchQuery):
+             baseUrl = ApiConstants.baseUrl + path
+
+            requestParams["offset"] = "\(offset)"
+            if let searchQuery = searchQuery {
+                requestParams["nameStartsWith"] = searchQuery
+            }
+            
+        case .getItem(let uri):
+            baseUrl = uri
+        }
+        
         requestParams["ts"] = ts
         requestParams["apikey"] = publicKey
         requestParams["hash"] = privateKeyMd5
         requestParams["limit"] = "10"
-
-        switch self {
-        case .getCharacters(let page, let searchQuery):
-            requestParams["offset"] = "\(page)"
-            if let searchQuery = searchQuery {
-                requestParams["nameStartsWith"] = searchQuery
-            }
-        }
-
-        
         //build query string
         var queryItems = [URLQueryItem]()
         for (key, value) in requestParams {
             queryItems.append(URLQueryItem(name: key, value: value))
         }
+
         
         var urlComponents = URLComponents(string: baseUrl)!
         urlComponents.queryItems = queryItems
@@ -86,9 +93,6 @@ enum APIRouter: URLRequestConvertible {
         }
         
         // Encoding
-//        if  path.contains("confirm") || path.contains("login") || path.contains("phone_number") || path.contains("revoke") || path.contains("intention") {
-//            return try JSONEncoding.default.encode(urlRequest, with: parameters)
-//        }
         print("URLS REQUEST :\(urlRequest)")
         
         return urlRequest as URLRequest

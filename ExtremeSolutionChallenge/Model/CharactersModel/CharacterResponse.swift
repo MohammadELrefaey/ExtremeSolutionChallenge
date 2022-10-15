@@ -5,7 +5,7 @@
 //
 
 import Foundation
-struct Results : Codable {
+struct CharacterResponse : Codable {
 	let id : Int?
 	let name : String?
 	let description : String?

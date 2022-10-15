@@ -21,7 +21,7 @@ class HomeCell: UITableViewCell {
     }
    
 //MARK: - Public Methods
-    public func configure(character: Results) {
+    public func configure(character: CharacterResponse) {
          let urlString = "\(character.thumbnail?.path ?? "")/portrait_incredible.\(character.thumbnail?.extension_ ?? "")"
         characterImg.setImage(with: urlString)
         characterNameLbl.text = character.name ?? ""

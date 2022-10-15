@@ -14,7 +14,7 @@ class SearchVC: UIViewController {
     
     var offset = 0
     var searchQuery: String = ""
-    var characters = [Results]() {
+    var characters = [CharacterResponse]() {
         didSet {
             tableView.reloadData()
         }

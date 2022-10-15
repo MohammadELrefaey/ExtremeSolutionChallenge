@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fAN-A8-310">
-                        <rect key="frame" x="5" y="0.0" width="198" height="275"/>
+                        <rect key="frame" x="5" y="0.0" width="198" height="211"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                 <real key="value" value="15"/>
@@ -25,11 +25,8 @@
                         </userDefinedRuntimeAttributes>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7P-Oo-qD5">
-                        <rect key="frame" x="10" y="285" width="188" height="40"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="40" id="bPm-Ff-unC"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <rect key="frame" x="10" y="221" width="188" height="104"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -42,6 +39,7 @@
                 <constraint firstItem="U7P-Oo-qD5" firstAttribute="top" secondItem="fAN-A8-310" secondAttribute="bottom" constant="10" id="QZC-ri-Fjj"/>
                 <constraint firstItem="fAN-A8-310" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="SpZ-e1-ROz"/>
                 <constraint firstItem="fAN-A8-310" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="T3n-E6-qH3"/>
+                <constraint firstItem="fAN-A8-310" firstAttribute="height" secondItem="ZTg-uK-7eu" secondAttribute="height" multiplier="0.75" id="bGQ-Sx-wmz"/>
                 <constraint firstAttribute="trailing" secondItem="U7P-Oo-qD5" secondAttribute="trailing" constant="10" id="hSq-3C-2Eg"/>
                 <constraint firstAttribute="bottom" secondItem="U7P-Oo-qD5" secondAttribute="bottom" id="qFV-Gl-LOd"/>
             </constraints>

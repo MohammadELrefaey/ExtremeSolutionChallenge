@@ -49,11 +49,17 @@ class APIManager {
         }
     }
     
-    func getCharacters(offset: Int, searchQuery: String? = nil, completion: @escaping (CharactersModel?, Error?) -> ()) {
+    func getCharacters(offset: Int, searchQuery: String? = nil, completion: @escaping (MainResponse<CharacterResponse>?, Error?) -> ()) {
         request(route: .getCharacters(offset: offset, searchQuery: searchQuery)) { response, error in
             completion(response, error)
         }
     }
     
+    func getItem(uri: String, completion: @escaping (MainResponse<ItemResponse>?, Error?) -> ()) {
+        request(route: .getItem(uri: uri)) { response, error in
+            completion(response, error)
+        }
+    }
+
 
 }

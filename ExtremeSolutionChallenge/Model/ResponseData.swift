@@ -5,12 +5,12 @@
 //
 
 import Foundation
-struct ResponseData : Codable {
+struct ResponseData<T: Codable> : Codable {
 	let offset : Int?
 	let limit : Int?
 	let total : Int?
 	let count : Int?
-	let results : [Results]?
+	let results : [T]?
 
 	enum CodingKeys: String, CodingKey {
 
@@ -27,7 +27,7 @@ struct ResponseData : Codable {
 		limit = try values.decodeIfPresent(Int.self, forKey: .limit)
 		total = try values.decodeIfPresent(Int.self, forKey: .total)
 		count = try values.decodeIfPresent(Int.self, forKey: .count)
-		results = try values.decodeIfPresent([Results].self, forKey: .results)
+		results = try values.decodeIfPresent([T].self, forKey: .results)
 	}
 
 }

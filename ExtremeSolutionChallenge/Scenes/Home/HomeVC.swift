@@ -13,7 +13,7 @@ class HomeVC: UIViewController {
     
     //MARK: - Properties
     var offset = 0
-    var characters = [Results]() {
+    var characters = [CharacterResponse]() {
         didSet {
             tableView.reloadData()
         }
@@ -88,7 +88,7 @@ extension HomeVC {
             guard let self = self else {return}
             if let characters = response?.data?.results {
                 self.characters.append(contentsOf: characters)
-//                self.stopLoading()
+                self.stopLoading()
             }
         }
         

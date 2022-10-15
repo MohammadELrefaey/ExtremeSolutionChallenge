@@ -11,16 +11,30 @@ class DetailsCell: UICollectionViewCell {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     func configure(item: Items?) {
-        
-        let urlString = "\(item?.resourceURI ?? "")"
-        imgView.setImage(with: urlString)
+
+        imgView.setImage(with: item?.resourceURI ?? "")
+        getItem(uri: item?.resourceURI ?? "")
         titleLbl.text = item?.name
+
+    }
+    
+    private func getItem(uri: String) {
+        APIManager.shared.getItem(uri: uri) { [weak self] response, error in
+            guard let self = self else {return}
+            if let item = response?.data?.results?[0] {
+                let urlString = "\(item.thumbnail?.path ?? "")/portrait_incredible.\(item.thumbnail?.extension_ ?? "")"
+                DispatchQueue.main.async {
+                    self.imgView.setImage(with: urlString)
+                }
+
+            }
+        }
 
     }
 }
