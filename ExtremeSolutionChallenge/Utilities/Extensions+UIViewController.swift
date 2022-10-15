@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import ProgressHUD
 
 extension UIViewController {
     func customPresent(vc: UIViewController) {
@@ -14,4 +15,20 @@ extension UIViewController {
         vc.modalTransitionStyle = .flipHorizontal
         self.present(vc, animated: true)
     }
+    
+    func showAlert(message: String) {
+        var alert: UIAlertController = UIAlertController()
+        alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func showLoading() {
+        ProgressHUD.show()
+    }
+    
+    func hideLoading() {
+        ProgressHUD.dismiss()
+    }
+
 }

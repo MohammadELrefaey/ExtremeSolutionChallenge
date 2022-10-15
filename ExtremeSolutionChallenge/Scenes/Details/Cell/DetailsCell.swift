@@ -25,16 +25,17 @@ class DetailsCell: UICollectionViewCell {
     }
     
     private func getItem(uri: String) {
-        APIManager.shared.getItem(uri: uri) { [weak self] response, error in
+        APIManager.shared.getItem(uri: uri) { [weak self] response, errorResponse, error in
             guard let self = self else {return}
             if let item = response?.data?.results?[0] {
                 let urlString = "\(item.thumbnail?.path ?? "")/portrait_incredible.\(item.thumbnail?.extension_ ?? "")"
                 DispatchQueue.main.async {
                     self.imgView.setImage(with: urlString)
                 }
-
             }
         }
 
     }
+
+    
 }

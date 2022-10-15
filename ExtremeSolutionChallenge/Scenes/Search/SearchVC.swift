@@ -13,6 +13,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     var offset = 0
+    var getLimit = false
     var searchQuery: String = ""
     var characters = [CharacterResponse]() {
         didSet {
@@ -54,7 +55,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
        let lastSectionIndex = tableView.numberOfSections - 1
        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-       if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
+       if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex && !getLimit {
            print("this is the last cell")
            let spinner = UIActivityIndicatorView(style: .whiteLarge)
            spinner.startAnimating()
@@ -82,43 +83,30 @@ extension SearchVC {
     }
     
     private func getCharacters() {
-        APIManager.shared.getCharacters(offset: self.offset, searchQuery: self.searchQuery) { [weak self] response, error in
+        APIManager.shared.getCharacters(offset: self.offset, searchQuery: self.searchQuery) { [weak self] response, errorResponse, error in
             guard let self = self else {return}
             if let characters = response?.data?.results {
+                self.getLimit = characters.count < 10 ? true : false
                 self.characters.append(contentsOf: characters)
                 self.stopLoading()
+            } else if let errorRespone = errorResponse {
+                self.showAlert(message: errorRespone.status ?? "")
+            } else if let error = error {
+                self.showAlert(message: error.localizedDescription )
             }
         }
-        
-    }
     
-    private func startLoading() {
-        let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
-        spinner.startAnimating()
-        spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
-        self.tableView.tableFooterView = spinner
-        self.tableView.tableFooterView?.isHidden = false
     }
-    
+
     private func stopLoading() {
         self.tableView.tableFooterView?.isHidden = true
         self.tableView.tableFooterView = nil
     }
 }
 
+// //MARK:- Search Delegates
 extension SearchVC: UISearchBarDelegate {
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        print(searchText)
-//
-//        if let searchQuery = searchBar.text {
-//            self.searchQuery = searchQuery
-//            getCharacters()
-//        } else {
-//            characters.removeAll()
-//        }
-//
-//    }
-    
+
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print(searchBar.text)
         if let searchQuery = searchBar.text, !searchQuery.isEmpty {
@@ -139,7 +127,6 @@ extension SearchVC: UISearchBarDelegate {
         textFieldInsideSearchBar?.attributedPlaceholder = NSAttributedString(string: "Search For Characters", attributes: attrs)
         textFieldInsideSearchBar?.leftView?.tintColor = .white
         searchBar.setImage(UIImage(named: "x.circle.fill"), for: .clear, state: .normal)
-//        self.searchBar.layer.borderColor = UIColor.white.cgColor
         searchBar.layer.borderWidth = 0
         searchBar.tintColor = UIColor.darkGray
     }

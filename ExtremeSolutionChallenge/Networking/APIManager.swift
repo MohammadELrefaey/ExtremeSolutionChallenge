@@ -12,7 +12,7 @@ class APIManager {
     static let shared = APIManager()
 
     //MARK:- Request
-     func request<T: Decodable>(route: APIRouter, completion:  @escaping (T?, Error?) -> ()) {
+     func request<T: Decodable>(route: APIRouter, completion:  @escaping (T?,ErrorResponse?, Error?) -> ()) {
         // Trigger the HttpRequest using AlamoFire
         AF.request(route).responseData { response in
             print("RESPONSE IS \(response)")
@@ -24,40 +24,40 @@ class APIManager {
                         guard let data = response.data else { return }
                         let results = try JSONDecoder().decode(T.self, from: data)
                         print("PARSED SUCCEED RESPONSE IS: \(results)")
-                        completion(results, nil)
+                        completion(results,nil, nil)
 
                     }
-//                    else {
-//                        guard let data = response.data else { return }
-//                        let results = try JSONDecoder().decode(ErrorResponse.self, from: data)
-//                        print("PARSED ERROR RESPONSE IS: \(results)")
-//                        completion(nil, results, nil)
-//                    }
+                    else {
+                        guard let data = response.data else { return }
+                        let results = try JSONDecoder().decode(ErrorResponse.self, from: data)
+                        print("PARSED ERROR RESPONSE IS: \(results)")
+                        completion(nil, results, nil)
+                    }
 
 
                     
                 } catch let error {
                     print ("Catch Parsing \(error) ")
-                    completion(nil, error)
+                    completion(nil, nil, error)
                 }
 
             case .failure(let error):
-                completion(nil, error)
+                completion(nil, nil, error)
             }
 
 
         }
     }
     
-    func getCharacters(offset: Int, searchQuery: String? = nil, completion: @escaping (MainResponse<CharacterResponse>?, Error?) -> ()) {
-        request(route: .getCharacters(offset: offset, searchQuery: searchQuery)) { response, error in
-            completion(response, error)
+    func getCharacters(offset: Int, searchQuery: String? = nil, completion: @escaping (MainResponse<CharacterResponse>?, ErrorResponse?, Error?) -> ()) {
+        request(route: .getCharacters(offset: offset, searchQuery: searchQuery)) { response, errorResponse, error in
+            completion(response, errorResponse, error)
         }
     }
     
-    func getItem(uri: String, completion: @escaping (MainResponse<ItemResponse>?, Error?) -> ()) {
-        request(route: .getItem(uri: uri)) { response, error in
-            completion(response, error)
+    func getItem(uri: String, completion: @escaping (MainResponse<ItemResponse>?, ErrorResponse?, Error?) -> ()) {
+        request(route: .getItem(uri: uri)) { response, errorResponse, error in
+            completion(response, errorResponse, error)
         }
     }
 

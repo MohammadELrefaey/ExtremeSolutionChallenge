@@ -13,6 +13,7 @@ class HomeVC: UIViewController {
     
     //MARK: - Properties
     var offset = 0
+    var getLimit = false
     var characters = [CharacterResponse]() {
         didSet {
             tableView.reloadData()
@@ -56,7 +57,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
        let lastSectionIndex = tableView.numberOfSections - 1
        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-       if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
+       if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex && !getLimit {
            print("this is the last cell")
            let spinner = UIActivityIndicatorView(style: .whiteLarge)
            spinner.startAnimating()
@@ -84,22 +85,19 @@ extension HomeVC {
     }
     
     private func getCharacters() {
-        APIManager.shared.getCharacters(offset: self.offset) { [weak self] response, error in
+        APIManager.shared.getCharacters(offset: self.offset) { [weak self] response, errorResponse, error in
             guard let self = self else {return}
             if let characters = response?.data?.results {
+                self.getLimit = characters.count < 10 ? true : false
                 self.characters.append(contentsOf: characters)
                 self.stopLoading()
+            } else if let errorRespone = errorResponse {
+                self.showAlert(message: errorRespone.status ?? "")
+            } else if let error = error {
+                self.showAlert(message: error.localizedDescription )
             }
         }
-        
-    }
     
-    private func startLoading() {
-        let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
-        spinner.startAnimating()
-        spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
-        self.tableView.tableFooterView = spinner
-        self.tableView.tableFooterView?.isHidden = false
     }
     
     private func stopLoading() {
