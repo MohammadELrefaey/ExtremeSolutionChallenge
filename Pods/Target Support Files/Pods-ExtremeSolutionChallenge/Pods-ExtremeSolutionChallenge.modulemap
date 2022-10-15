@@ -1,0 +1,6 @@
+framework module Pods_ExtremeSolutionChallenge {
+  umbrella header "Pods-ExtremeSolutionChallenge-umbrella.h"
+
+  export *
+  module * { export * }
+}
